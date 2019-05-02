@@ -15,18 +15,20 @@ module spline_approximation
             
             n = size ( x )
 
-            call matrix_constructor( x, A, B)                     
+            call matrix_constructor( x, A, B)           
             
             call diagonal_matrix_constructor( Q, p )                   
             
-            B_transp = transpose_3d(B)                                  
-            BY = matrix_3d_vector_mult(B, y)                            
+            B_transp = transpose_3d(B)                    
+            BY = 6*matrix_3d_vector_mult(B, y)            
             
-            Res = A + 6 * matmul_3d( convertor( matmul_3d(B, Q) ), B_transp )
+            Res = A + 6 * matmul_3d( convertor( matmul_3d(B, Q) ), B_transp )   
             
             call fivediagonal_matrix_algorythm(Res, BY, S) 
             
+            
             R = y - matrix_3d_vector_mult ( convertor( matmul_3d( Q, B_transp) ), S)
+            
                      
             i = 1    
             h = x(i+1) - x(i)
@@ -52,8 +54,8 @@ module spline_approximation
                 result_array(size(result_array)) = R(n)
             
 		end subroutine
-
-        subroutine matrix_constructor(x, A, B)
+        
+        subroutine matrix_constructor(X, A, B)
     
             real(8) :: x(0:), A(0:,0:), B(0:,0:)
             integer :: n, i
@@ -210,23 +212,23 @@ module spline_approximation
 			integer :: msize
             real(8), dimension (:,-2:) :: Sys
             real(8), dimension (:) :: d, x
-			real, dimension (-1:size(Sys,1)) :: beta, alpha, p, q, u, r, a, b, c
+			real, dimension (-1: size(Sys,1) ) :: beta, alpha, p, q, u, r, a, b, c
             
 			msize = size(Sys,1)
 
 
-            a=0
-            a ( 1 : msize ) = Sys(:, 0)
-			b=0
-            b ( 1 : msize ) = Sys(:, 1)
-			c=0
-            c ( 1 : msize ) = Sys(:, 2)
-			alpha=0
-			beta=0
-			p=0
-			q=0
-			r=0
-            x=0
+            a = 0
+            a(1:msize) = Sys(:, 0)
+			b = 0
+            b(1:msize) = Sys(:, 1)
+			c = 0
+            c(1:msize) = Sys(:, 2)
+			alpha = 0
+			beta = 0
+			p = 0
+			q = 0
+			r = 0
+            x = 0
 			
 			do i = 1, msize
             
@@ -248,6 +250,5 @@ module spline_approximation
 			end do
             
 		end subroutine fivediagonal_matrix_algorythm
-        
         
 end module spline_approximation
