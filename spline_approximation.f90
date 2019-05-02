@@ -4,7 +4,7 @@ module spline_approximation
     
 	contains
 	
-        subroutine approximation ( x, y, p, result_array, arg_array )                    
+        subroutine approximation ( x, y, p, result_array, arg_array )       ! main approximation subroutine                   
         
             integer(4) :: i, j, n, k 		                                
             real(8) :: h, t                   
@@ -15,19 +15,19 @@ module spline_approximation
             
             n = size ( x )
 
-            call matrix_constructor( x, A, B)           
+            call matrix_constructor( x, A, B)                               ! craete needed tridiagonal matrixes
             
-            call diagonal_matrix_constructor( Q, p )                   
+            call diagonal_matrix_constructor( Q, p )                        ! create needed diagonal matrix               
             
-            B_transp = transpose_3d(B)                    
-            BY = 6*matrix_3d_vector_mult(B, y)            
+            B_transp = transpose_3d(B)                                      ! transpose tridiagonal matrix
+            BY = 6*matrix_3d_vector_mult(B, y)                              ! multiply tridiagonal matrix by vector of original data
             
-            Res = A + 6 * matmul_3d( convertor( matmul_3d(B, Q) ), B_transp )   
+            Res = A + 6 * matmul_3d( convertor( matmul_3d(B, Q) ), B_transp )   ! calculate matrix needed for linear system
             
-            call fivediagonal_matrix_algorythm(Res, BY, S) 
+            call fivediagonal_matrix_algorythm(Res, BY, S)                  ! solve linear system using tridiagonal matrix algorithm
             
             
-            R = y - matrix_3d_vector_mult ( convertor( matmul_3d( Q, B_transp) ), S)
+            R = y - matrix_3d_vector_mult ( convertor( matmul_3d( Q, B_transp) ), S)   !create vector needed for calculating spline value
             
                      
             i = 1    
@@ -47,15 +47,15 @@ module spline_approximation
                     endif
                     
                     t = ( arg_array(j) - x(i) )/h
-                    result_array(j) = R(i)*(1-t) + R(i+1)*t - t*(1-t)*(h**2)*((2-t)*S(i)+(1+t)*S(i+1))/6.0
+                    result_array(j) = R(i)*(1-t) + R(i+1)*t - t*(1-t)*(h**2)*((2-t)*S(i)+(1+t)*S(i+1))/6.0      ! calculation of spline value in xi point
                 
                 end do
                 
-                result_array(size(result_array)) = R(n)
+                result_array(size(result_array)) = R(n)                         ! value of last approximation point
             
 		end subroutine
         
-        subroutine matrix_constructor(X, A, B)
+        subroutine matrix_constructor(X, A, B)                          ! subroutine which constructs 2 tridiagonal matrixes
     
             real(8) :: x(0:), A(0:,0:), B(0:,0:)
             integer :: n, i
@@ -95,7 +95,7 @@ module spline_approximation
             
         end subroutine matrix_constructor
         
-        subroutine diagonal_matrix_constructor( Q, p )
+        subroutine diagonal_matrix_constructor( Q, p ))                          ! subroutine which constructs diagonal matrix
       
             real(8) :: p(1:), Q(:,0:)
             integer :: n, i
@@ -112,7 +112,7 @@ module spline_approximation
             
         end subroutine diagonal_matrix_constructor
         
-        function transpose_3d(A) result(B)
+        function transpose_3d(A) result(B))                                  ! function which transposes tridiagonal matrix
       
             real(8) :: A(1:,1:), B(1:size(A,1), 1:3)
             integer :: i
@@ -131,7 +131,7 @@ module spline_approximation
         
         end function transpose_3d
         
-        function matmul_3d(A, B) result(C)
+        function matmul_3d(A, B) result(C)                                  ! function which multipies 2 tridiagonal matrixes
      
             real(8), dimension(1:,1:) :: A, B
             real(8), dimension(1:size(A,1),5) :: C
@@ -171,7 +171,7 @@ module spline_approximation
             
         end function matmul_3d
         
-        function matrix_3d_vector_mult(A,B) result(C)
+        function matrix_3d_vector_mult(A,B) result(C)                                  ! function which multipies tridiagonal matrix on a vector
         
             real(8) :: A(1:,1:), B(1:), C(size(B))
             integer :: i, n
@@ -190,7 +190,7 @@ module spline_approximation
         
         end function matrix_3d_vector_mult
         
-        function convertor(A) result(B)
+        function convertor(A) result(B)                                                 ! function which converts fivediagonal matrixe into tridiagonal matrix
       
             real(8) :: A(1:,1:), B(1:size(A,1),1:3)
             integer :: i
@@ -206,7 +206,7 @@ module spline_approximation
         end function convertor
         
                 
-        subroutine fivediagonal_matrix_algorythm (Sys, d, x )
+        subroutine fivediagonal_matrix_algorythm (Sys, d, x )                          ! subroutine which solves linear system using tridiagonal matrix algorithm
 		
 			integer :: i
 			integer :: msize

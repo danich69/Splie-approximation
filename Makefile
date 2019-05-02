@@ -11,6 +11,6 @@ data: ./creator
 ./creator: creator.f90
 	gfortran creator.f90 -o creator
 clean: 
-	rm -f *.o *mod
+	rm -f *.o *mod creator prog
 graph: result.dat
 	gnuplot plot_un.gnu
