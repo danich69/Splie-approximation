@@ -95,7 +95,7 @@ module spline_approximation
             
         end subroutine matrix_constructor
         
-        subroutine diagonal_matrix_constructor( Q, p ))                          ! subroutine which constructs diagonal matrix
+        subroutine diagonal_matrix_constructor( Q, p )                          ! subroutine which constructs diagonal matrix
       
             real(8) :: p(1:), Q(:,0:)
             integer :: n, i
@@ -112,7 +112,7 @@ module spline_approximation
             
         end subroutine diagonal_matrix_constructor
         
-        function transpose_3d(A) result(B))                                  ! function which transposes tridiagonal matrix
+        function transpose_3d(A) result(B)                                  ! function which transposes tridiagonal matrix
       
             real(8) :: A(1:,1:), B(1:size(A,1), 1:3)
             integer :: i
